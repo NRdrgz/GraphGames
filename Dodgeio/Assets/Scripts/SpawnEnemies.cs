@@ -35,7 +35,6 @@ public class SpawnEnemies : MonoBehaviour
             enemyPosition = new Vector3(row, -0.038f, col-0.5f);
             
             GameObject enemy = Instantiate(enemyPrefab, enemyPosition, Quaternion.identity);
-            Debug.Log("Spawning Ennemy in " + enemyPosition.x + ","+ enemyPosition.z);
             enemy.AddComponent<MovementEnemies>();
             //scale character same as spawner
             enemy.transform.localScale = transform.localScale;
