@@ -79,7 +79,7 @@ Material:
     - _MinLight: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Offset: 0
+    - _Offset: -0.093
     - _Parallax: 0.02
     - _Segmented: 1
     - _ShnIntense: 0
@@ -89,7 +89,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Steps: 3
+    - _Steps: 4
     - _StpSmooth: 0
     - _UVSec: 0
     - _ZWrite: 1

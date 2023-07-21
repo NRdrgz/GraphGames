@@ -11,12 +11,15 @@ public class MovementEnemies : MonoBehaviour
     public float maxWaitTime = 3f;
     private bool isMoving = false;
     private Vector3 targetPosition;
+    private Animator animator;
 
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
+        // Get the animator when spawning
+        animator = GetComponent<Animator>();
         StartCoroutine(MoveCoroutine());
     }
 
@@ -32,6 +35,9 @@ public class MovementEnemies : MonoBehaviour
                 isMoving = false;
             }
         }
+
+        //Handle animations
+        animator.SetBool("isMoving", isMoving);
 
     }
 

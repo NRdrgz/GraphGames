@@ -10,8 +10,8 @@ public class GridManager : MonoBehaviour
     public Color lightColor;
     public Color darkColor;
     public Color blinkColor;
-    private GameObject[,] gridCells;
-    private bool[,] gridCells_is_fallen;
+    public GameObject[,] gridCells;
+    public bool[,] gridCells_is_fallen;
     public bool gameStarted = false;
     public GameObject[] tutos;
     public EndScreenController panelController;
