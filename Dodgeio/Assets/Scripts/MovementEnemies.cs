@@ -9,6 +9,9 @@ public class MovementEnemies : MonoBehaviour
     public float movementSpeed = 5f;
     public float minWaitTime = 1f;
     public float maxWaitTime = 3f;
+    private float moveTimer = 0f;
+    public float checkInterval = 0.2f; //Check interval for red tiles
+    private float checkTimer = 0f;
     private bool isMoving = false;
     private Vector3 targetPosition;
     private Animator animator;
@@ -20,12 +23,15 @@ public class MovementEnemies : MonoBehaviour
     {
         // Get the animator when spawning
         animator = GetComponent<Animator>();
-        StartCoroutine(MoveCoroutine());
+        moveTimer = Random.Range(minWaitTime, maxWaitTime);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //Update movement
         if (isMoving)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, movementSpeed * Time.deltaTime);
@@ -36,57 +42,52 @@ public class MovementEnemies : MonoBehaviour
             }
         }
 
+        //Update movement timer
+        moveTimer -= Time.deltaTime;
+        if (!isMoving && moveTimer <= 0f)
+        {
+            //Reset timer
+            moveTimer = Random.Range(minWaitTime, maxWaitTime);
+            DecideRandomDirection();
+        }
+
+        //Update check timer
+        checkTimer -= Time.deltaTime;
+        if (!isMoving && checkTimer <= 0f)
+        {
+            //Reset timer
+            checkTimer = checkInterval;
+            CheckForRedTile();
+        }
+
         //Handle animations
         animator.SetBool("isMoving", isMoving);
 
     }
 
-    private System.Collections.IEnumerator MoveCoroutine()
+
+    private void DecideRandomDirection()
     {
-        while (true)
+        int sideIndex = Random.Range(0, 4);
+        switch (sideIndex)
         {
-            // Wait for a random time before moving again
-            float waitTime = Random.Range(minWaitTime, maxWaitTime);
-            yield return new WaitForSeconds(waitTime);
+            case 0: //right
+                MoveCharacter(Vector3.right);
+                break;
+            case 1: //up
+                MoveCharacter(Vector3.forward);
+                break;
+            case 2: //left
+                MoveCharacter(Vector3.left);
+                break;
+            case 3: //down
+                MoveCharacter(Vector3.back);
+                break;
 
-            // Move the character
-            if (!isMoving)
-            {
-                MoveEnemy();
-            }
         }
-
+        
     }
 
-
-    private void MoveEnemy()
-    {
-        DecideDirection();
-    }
-
-    private void DecideDirection()
-    {
-        if (selectedMoveType == "Random")
-        {
-            int sideIndex = Random.Range(0, 4);
-            switch (sideIndex)
-            {
-                case 0: //right
-                    MoveCharacter(Vector3.right);
-                    break;
-                case 1: //up
-                    MoveCharacter(Vector3.forward);
-                    break;
-                case 2: //left
-                    MoveCharacter(Vector3.left);
-                    break;
-                case 3: //down
-                    MoveCharacter(Vector3.back);
-                    break;
-
-            }
-        }
-    }
 
     private void MoveCharacter(Vector3 direction)
     {
@@ -127,16 +128,42 @@ public class MovementEnemies : MonoBehaviour
         return true;
     }
 
+    private void CheckForRedTile()
+    {
+        // Raycast downward to detect if the character is standing on a red tile
+        RaycastHit hit;
+        
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y+0.5f, transform.position.z), Vector3.down, out hit, 5f))
+        {
+            // Check if the object is a redtile
+            if (hit.collider.gameObject.name == "Tile"
+                && hit.collider.gameObject.GetComponent<Renderer>().material.color.IsEqualTo(GridManager.Instance.blinkColor))
+            {
+                // Character is standing on a red tile, move character
+                Debug.Log("Character is standing on a red tile!");
+                if (!isMoving)
+                {
+                    DecideRandomDirection();
+                }
+            }
+        }
+    }
+
+
 
     private void OnCollisionEnter(Collision collision)
     {
-        //If the players fall out
+        //If the enemy fall out
         if (collision.gameObject.name == "Out")
         {
             Destroy(gameObject); //destroy ennemy
 
         }
+
     }
+
+
+
 
 
 }

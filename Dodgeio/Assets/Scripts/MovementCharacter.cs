@@ -22,7 +22,7 @@ public class MovementCharacter : MonoBehaviour
         Keyboard
     }
 
-    public InputType inputType = InputType.Swipe;
+    public InputType inputType = InputType.Keyboard;
 
 
 
