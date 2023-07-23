@@ -40,7 +40,7 @@ public class MovementRocket : MonoBehaviour
 
             Destroy(collision.gameObject); //destroy player when it hits a rocket
             Destroy(gameObject);
-            GridManager.Instance.panelController.ShowPanel(); //make end screen appear
+            GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
             
 
         }
@@ -54,6 +54,7 @@ public class MovementRocket : MonoBehaviour
 
             Destroy(collision.gameObject); //destroy enemy when it hits a rocket
             Destroy(gameObject);
+            GridManager.Instance.remainingEnemies--;
 
         }
 

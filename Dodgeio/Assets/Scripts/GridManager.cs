@@ -14,10 +14,12 @@ public class GridManager : MonoBehaviour
     public bool[,] gridCells_is_fallen;
     public bool gameStarted = false;
     public GameObject[] screen;
-    public EndScreenController panelController;
+    public EndScreenControllerLose panelControllerLose;
+    public EndScreenControllerWin panelControllerWin;
     private static GridManager instance;
     public GameObject gridCellPrefab; // Reference to a prefab for each grid cell
     public int nbrEnemies;
+    public int remainingEnemies = 0;
     private int currentEnemies = 0;
 
     //LEVEL VARIABLES
@@ -63,6 +65,7 @@ public class GridManager : MonoBehaviour
             {
                 GameObject.Find("EnemySpawner").GetComponent<SpawnEnemies>().CreateEnemy();
                 currentEnemies++;
+                remainingEnemies++;
             }
 
             
@@ -74,6 +77,13 @@ public class GridManager : MonoBehaviour
                 CallTileFall();
                 spawnTimer = spawnDelayRate;
 
+            }
+
+            //If character is the last survivor
+            if (remainingEnemies==0)
+            {
+                panelControllerWin.ShowPanel();
+                gameStarted = false;
             }
 
 

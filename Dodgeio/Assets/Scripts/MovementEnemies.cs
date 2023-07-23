@@ -270,7 +270,7 @@ public class MovementEnemies : MonoBehaviour
         if (collision.gameObject.name == "Out")
         {
             Destroy(gameObject); //destroy ennemy
-
+            GridManager.Instance.remainingEnemies--;
         }
 
     }

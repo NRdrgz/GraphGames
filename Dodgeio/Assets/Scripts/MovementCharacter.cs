@@ -190,7 +190,7 @@ public class MovementCharacter : MonoBehaviour
         if (collision.gameObject.name == "Out")
         {
             Destroy(gameObject); //destroy character
-            GridManager.Instance.panelController.ShowPanel(); //make end screen appear
+            GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
 
         }
     }

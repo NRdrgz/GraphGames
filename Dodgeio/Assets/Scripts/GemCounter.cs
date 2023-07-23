@@ -5,20 +5,24 @@ using TMPro;
 
 public class GemCounter : MonoBehaviour
 {
-    public GameObject gemtext;
-    public int currentGems = 0;
+    public GameObject gemtextMain;
+    public GameObject gemtextGame;
+    public int currentGemsMain = 0;
+    public int currentGemsGame = 0;
     public static GemCounter instance;
 
     private void Awake()
     {
         instance = this;
-        currentGems = PlayerPrefs.GetInt("CollectedGems");
+        currentGemsMain = PlayerPrefs.GetInt("CollectedGems", 0);
+        gemtextMain.GetComponent<TextMeshProUGUI>().text = currentGemsMain.ToString();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        gemtext.GetComponent<TextMeshProUGUI>().text = currentGems.ToString();
+        currentGemsGame = 0;
+        gemtextGame.GetComponent<TextMeshProUGUI>().text = currentGemsGame.ToString();
     }
 
     // Update is called once per frame
@@ -27,11 +31,23 @@ public class GemCounter : MonoBehaviour
         
     }
 
-    public void IncreaseGems(int v)
+    public void IncreaseGems(int v, string increaseType)
     {
-        currentGems = currentGems + v;
-        PlayerPrefs.SetInt("CollectedGems", currentGems);
-        iTween.PunchScale(gemtext, new Vector3(2, 2, 2), 1.0f);
-        gemtext.GetComponent<TextMeshProUGUI>().text = currentGems.ToString();
+        if (increaseType == "Main")
+        {
+            currentGemsMain = currentGemsMain + v;
+            PlayerPrefs.SetInt("CollectedGems", currentGemsMain);
+            iTween.PunchScale(gemtextMain, new Vector3(2, 2, 2), 1.0f);
+            gemtextMain.GetComponent<TextMeshProUGUI>().text = currentGemsMain.ToString();
+
+        }
+
+        else if (increaseType == "Game")
+        {
+            currentGemsGame = currentGemsGame + v;
+            iTween.PunchScale(gemtextGame, new Vector3(2, 2, 2), 1.0f);
+            gemtextGame.GetComponent<TextMeshProUGUI>().text = currentGemsGame.ToString();
+
+        }
     }
 }
