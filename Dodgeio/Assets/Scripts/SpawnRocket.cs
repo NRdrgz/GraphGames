@@ -100,13 +100,6 @@ public class SpawnRocket : MonoBehaviour
         // Instantiate the rocket prefab at the spawn position with the appropriate rotation
         GameObject rocket = Instantiate(rocketPrefab, spawnPosition, spawnRotation);
 
-        //Increment the score
-        if (GridManager.Instance.isPlayerAlive)
-        {
-            iTween.PunchScale(GridManager.Instance.score, new Vector3(2, 2, 2), 1.0f);
-            int newScore = int.Parse(GridManager.Instance.score.GetComponent<TextMeshProUGUI>().text) + 1;
-            GridManager.Instance.score.GetComponent<TextMeshProUGUI>().text = newScore.ToString();
-        }
     }
 
     private void CallBlinkTile(Renderer tileRenderer)

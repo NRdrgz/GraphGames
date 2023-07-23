@@ -5,22 +5,24 @@ using UnityEngine;
 public class SpawnCharacter : MonoBehaviour
 {
 
-    public GameObject characterPrefab;
-    public float timeTrail;
-    public AnimationCurve widthCurve;
-    public Gradient colorGradient;
-    public Material trailMaterial;
+    public GameObject[] characterPrefabs;
+    private GameObject characterPrefab;
     private Vector3 characterPosition;
+    private int selectedSkin;
 
+    private void Awake()
+    {
+        selectedSkin = PlayerPrefs.GetInt("SelectedSkin", 0); //Retrieve the saved skin, 0 by default
+        characterPrefab = characterPrefabs[selectedSkin];
+    }
 
 
     void Start()
     {
-   
-        CreateCharacter();
-        GridManager.Instance.isPlayerAlive = true;
 
-        
+        CreateCharacter();
+
+
     }
 
     void CreateCharacter()
@@ -38,8 +40,16 @@ public class SpawnCharacter : MonoBehaviour
 
     }
 
-    
+    public void ChangeSkin() //To change the skin when clicking in the shop
+    {
+        Destroy(GameObject.Find("MainPlayer"));
+        selectedSkin = PlayerPrefs.GetInt("SelectedSkin", 0); //Retrieve the saved skin, 0 by default
+        characterPrefab = characterPrefabs[selectedSkin];
+        CreateCharacter();
+    }
 
+
+  
     // Update is called once per frame
     void Update()
     {

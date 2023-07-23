@@ -13,12 +13,12 @@ public class GridManager : MonoBehaviour
     public GameObject[,] gridCells;
     public bool[,] gridCells_is_fallen;
     public bool gameStarted = false;
-    public GameObject[] tutos;
+    public GameObject[] screen;
     public EndScreenController panelController;
     private static GridManager instance;
     public GameObject gridCellPrefab; // Reference to a prefab for each grid cell
-    public GameObject score;
-    public bool isPlayerAlive = true;
+    public int nbrEnemies;
+    private int currentEnemies = 0;
 
     //LEVEL VARIABLES
 
@@ -26,8 +26,8 @@ public class GridManager : MonoBehaviour
     public int numColumns;
     public float blinkDuration;
     public int blinkTimes;
-    public float spawnDelayInit; // Delay to make first rocket appear
     public float spawnDelayRate; // Delay between two appearances of rocket
+    public float spawnTimer = 0f;
     
     
 
@@ -48,28 +48,44 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         GenerateGrid();
-        score = GameObject.Find("ScoreText"); //retrieve the score
         
-
-        // Spawn the rocket on a random side of the grid
-        InvokeRepeating("CallCreateRocket", spawnDelayInit, spawnDelayRate);
-
-        //Make tile fall
-        InvokeRepeating("CallTileFall", spawnDelayInit, spawnDelayRate);
         
     }
 
 
     void Update()
     {
-        //to remove the tutorial frame
-        if (Input.GetMouseButtonDown(0) && !gameStarted)
+        
+        if (gameStarted)
         {
-            gameStarted = true;
-            tutos[0].SetActive(false);
-        }
+            //Spawn the enemies
+            if (currentEnemies < nbrEnemies)
+            {
+                GameObject.Find("EnemySpawner").GetComponent<SpawnEnemies>().CreateEnemy();
+                currentEnemies++;
+            }
 
+            
+            //Update spawn timer
+            spawnTimer -= Time.deltaTime;
+            if (spawnTimer <= 0f)
+            {
+                CallCreateRocket();
+                CallTileFall();
+                spawnTimer = spawnDelayRate;
+
+            }
+
+
+        }
     }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        screen[0].SetActive(false); //make the main screen disappear
+    }
+
 
     void GenerateGrid()
     {
@@ -150,6 +166,7 @@ public class GridManager : MonoBehaviour
         // Blink the tile color between original and blink colors
         
         Color originalColor = tileRenderer.material.color;
+        tileRenderer.gameObject.tag = "Blinking"; //Tile the tile as blinking
         for (int i = 0; i < blinkTimes; i++)
         {
             float elapsedTime = 0f;
@@ -162,6 +179,7 @@ public class GridManager : MonoBehaviour
                 elapsedTime += blinkDuration;
             }
         }
+        tileRenderer.gameObject.tag = "Untagged"; //Untag the tile
     }
 
 
@@ -176,13 +194,6 @@ public class GridManager : MonoBehaviour
             cellRigidbody.isKinematic = false; //Make the tile fall
             gridCells_is_fallen[row, col] = true; //Reference the fall
 
-            //Increment the score
-            if (GridManager.Instance.isPlayerAlive)
-            {
-                iTween.PunchScale(GridManager.Instance.score, new Vector3(2, 2, 2), 1.0f);
-                int newScore = int.Parse(GridManager.Instance.score.GetComponent<TextMeshProUGUI>().text) + 1;
-                GridManager.Instance.score.GetComponent<TextMeshProUGUI>().text = newScore.ToString();
-            }
         }
     }
 

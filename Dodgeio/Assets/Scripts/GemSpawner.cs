@@ -20,7 +20,7 @@ public class GemSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gemsSpawned < maxGems)
+        if (gemsSpawned < maxGems && GridManager.Instance.gameStarted)
         {
             timer += Time.deltaTime;
             if (timer >= spawnInterval)

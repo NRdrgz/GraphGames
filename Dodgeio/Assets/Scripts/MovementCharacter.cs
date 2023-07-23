@@ -191,7 +191,6 @@ public class MovementCharacter : MonoBehaviour
         {
             Destroy(gameObject); //destroy character
             GridManager.Instance.panelController.ShowPanel(); //make end screen appear
-            GridManager.Instance.isPlayerAlive = false;
 
         }
     }

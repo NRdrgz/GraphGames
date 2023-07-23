@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementEnemies : MonoBehaviour
-{
-    public string[] moveType = { "Random", "Smart" };
-    public string selectedMoveType = "Random";
+{   
     public float movementSpeed = 5f;
     public float minWaitTime = 1f;
     public float maxWaitTime = 3f;
@@ -16,6 +14,13 @@ public class MovementEnemies : MonoBehaviour
     private Vector3 targetPosition;
     private Animator animator;
 
+    public enum MoveType
+    {
+        Random,
+        Smart
+    }
+
+    public MoveType moveType = MoveType.Smart;
 
 
     // Start is called before the first frame update
@@ -48,16 +53,29 @@ public class MovementEnemies : MonoBehaviour
         {
             //Reset timer
             moveTimer = Random.Range(minWaitTime, maxWaitTime);
-            DecideRandomDirection();
+
+            if (moveType == MoveType.Smart)
+            {
+                DecideSmartDirection();
+            }
+            else
+            {
+                DecideRandomDirection();
+            }
+            
         }
 
-        //Update check timer
-        checkTimer -= Time.deltaTime;
-        if (!isMoving && checkTimer <= 0f)
+        if (moveType == MoveType.Smart)
         {
-            //Reset timer
-            checkTimer = checkInterval;
-            CheckForRedTile();
+            //Update check timer
+            checkTimer -= Time.deltaTime;
+            if (!isMoving && checkTimer <= 0f)
+            {
+                //Reset timer
+                checkTimer = checkInterval;
+                CheckForRedTile();
+            }
+
         }
 
         //Handle animations
@@ -87,6 +105,101 @@ public class MovementEnemies : MonoBehaviour
         }
         
     }
+    
+    private void DecideSmartDirection()
+    {
+        //Scan the surroundings
+        /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0.5f, -1f, 0f)*5, Color.black, 3f); //Right ray
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(-0.5f, -1f, 0f) * 5, Color.red, 3f); //Left ray
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, 0.5f) * 5, Color.blue, 3f); //Up ray
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, -0.5f) * 5, Color.yellow, 3f); //Down ray
+        */
+        int[] moveOrder = new int[] { 0, 1, 2, 3 }; //Move order to check
+        moveOrder = ShuffleArray(moveOrder); //Shuffle the array
+        RaycastHit hit;
+
+        // Iterate through the shuffled array using a for loop
+        for (int i = 0; i < moveOrder.Length; i++)
+        {
+            
+            if (moveOrder[i] == 0
+                && Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0.5f, -1f, 0f) * 5, out hit, 5f)) //right
+            {
+                /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+                new Vector3(0.5f, -1f, 0f) * 5, Color.black, 3f);
+                Debug.Log("On right there is " + hit.collider.gameObject.name + " with Tag " + hit.collider.gameObject.tag);*/
+                //Check if the object is a valid Tile
+                if (hit.collider.gameObject.name == "Tile"
+                && hit.collider.gameObject.tag != "Blinking")
+                {
+                    //Debug.Log("Nice tile on right");
+                    MoveCharacter(Vector3.right);
+                    break;
+                }
+
+            }
+
+            else if (moveOrder[i] == 1
+                && Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, 0.5f) * 5, out hit, 5f)) //up
+            {
+                /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, 0.5f) * 5, Color.blue, 3f);
+                Debug.Log("On up there is " + hit.collider.gameObject.name + " with Tag " + hit.collider.gameObject.tag);*/
+                //Check if the object is a valid Tile
+                if (hit.collider.gameObject.name == "Tile"
+                && hit.collider.gameObject.tag != "Blinking")
+                {
+                    //Debug.Log("Nice tile on up");
+                    MoveCharacter(Vector3.forward);
+                    break;
+                }
+
+            }
+
+            else if (moveOrder[i] == 2
+                && Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(-0.5f, -1f, 0f) * 5, out hit, 5f)) //left
+            {
+                /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(-0.5f, -1f, 0f) * 5, Color.red, 3f);
+                Debug.Log("On left there is " + hit.collider.gameObject.name + " with Tag " + hit.collider.gameObject.tag);*/
+                //Check if the object is a valid Tile
+                if (hit.collider.gameObject.name == "Tile"
+                && hit.collider.gameObject.tag != "Blinking")
+                {
+                    //Debug.Log("Nice tile on left");
+                    MoveCharacter(Vector3.left);
+                    break;
+                }
+
+            }
+
+            else if (moveOrder[i] == 3
+                && Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, -0.5f) * 5, out hit, 5f)) //back
+            {
+                /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+            new Vector3(0f, -1f, -0.5f) * 5, Color.yellow, 3f);
+                Debug.Log("On back there is " + hit.collider.gameObject.name + " with Tag " + hit.collider.gameObject.tag);*/
+                //Check if the object is a valid Tile
+                if (hit.collider.gameObject.name == "Tile"
+                && hit.collider.gameObject.tag != "Blinking")
+                {
+                    //Debug.Log("Nice tile on back");
+                    MoveCharacter(Vector3.back);
+                    break;
+                }
+
+            }
+        }
+    }
+    
 
 
     private void MoveCharacter(Vector3 direction)
@@ -137,13 +250,13 @@ public class MovementEnemies : MonoBehaviour
         {
             // Check if the object is a redtile
             if (hit.collider.gameObject.name == "Tile"
-                && hit.collider.gameObject.GetComponent<Renderer>().material.color.IsEqualTo(GridManager.Instance.blinkColor))
+                && hit.collider.gameObject.tag == "Blinking")
             {
                 // Character is standing on a red tile, move character
-                Debug.Log("Character is standing on a red tile!");
+                //Debug.Log("Character is standing on a red tile!");
                 if (!isMoving)
                 {
-                    DecideRandomDirection();
+                    DecideSmartDirection();
                 }
             }
         }
@@ -160,6 +273,21 @@ public class MovementEnemies : MonoBehaviour
 
         }
 
+    }
+
+    private int[] ShuffleArray(int[] array)
+    {
+        int n = array.Length;
+        while (n > 1)
+        {
+            n--;
+            int k = Random.Range(0, n + 1);
+            int value = array[k];
+            array[k] = array[n];
+            array[n] = value;
+        }
+
+        return array;
     }
 
 
