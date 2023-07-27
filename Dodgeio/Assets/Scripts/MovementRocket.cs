@@ -38,6 +38,7 @@ public class MovementRocket : MonoBehaviour
             Vector3 position = contact.point;
             Instantiate(explosionPrefab, position, rotation);
 
+            Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(collision.gameObject); //destroy player when it hits a rocket
             Destroy(gameObject);
             GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
@@ -52,6 +53,7 @@ public class MovementRocket : MonoBehaviour
             Vector3 position = contact.point;
             Instantiate(explosionPrefab, position, rotation);
 
+            Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(collision.gameObject); //destroy enemy when it hits a rocket
             Destroy(gameObject);
             GridManager.Instance.remainingEnemies--;

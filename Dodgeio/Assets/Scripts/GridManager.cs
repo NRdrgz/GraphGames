@@ -20,7 +20,7 @@ public class GridManager : MonoBehaviour
     public GameObject gridCellPrefab; // Reference to a prefab for each grid cell
     public int nbrEnemies;
     public int remainingEnemies = 0;
-    private int currentEnemies = 0;
+    public int currentEnemies = 0;
 
     //LEVEL VARIABLES
 
@@ -28,8 +28,11 @@ public class GridManager : MonoBehaviour
     public int numColumns;
     public float blinkDuration;
     public int blinkTimes;
-    public float spawnDelayRate; // Delay between two appearances of rocket
-    public float spawnTimer = 0f;
+    private int level;
+    public float spawnDelayRateTiles; // Delay between two drops of tiles
+    public float spawnTimerTiles = 0f;
+    public float spawnDelayRateRockets; // Delay between two appearances of rocket
+    public float spawnTimerRockets = 0f;
     
     
 
@@ -50,8 +53,20 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         GenerateGrid();
+        level = PlayerPrefs.GetInt("Level", 1);
         
-        
+        spawnDelayRateTiles = -0.15f*level+5.15f; //Start at 5 at level 1 and 2 at level 20;
+        if (spawnDelayRateTiles<2)
+        {
+            spawnDelayRateTiles = 2;
+        }
+
+        spawnDelayRateRockets = -0.11f * level + 3.11f; //Start at 3 at level 1 and 1 at level 20;
+        if (spawnDelayRateTiles < 1)
+        {
+            spawnDelayRateTiles = 1;
+        }
+
     }
 
 
@@ -69,13 +84,21 @@ public class GridManager : MonoBehaviour
             }
 
             
-            //Update spawn timer
-            spawnTimer -= Time.deltaTime;
-            if (spawnTimer <= 0f)
+            //Update spawn timer Rockets
+            spawnTimerRockets -= Time.deltaTime;
+            if (spawnTimerRockets <= 0f)
             {
                 CallCreateRocket();
+                spawnTimerRockets = spawnDelayRateRockets;
+
+            }
+
+            //Update spawn timer Tiles
+            spawnTimerTiles -= Time.deltaTime;
+            if (spawnTimerTiles <= 0f)
+            {
                 CallTileFall();
-                spawnTimer = spawnDelayRate;
+                spawnTimerTiles = spawnDelayRateTiles;
 
             }
 
@@ -176,20 +199,23 @@ public class GridManager : MonoBehaviour
         // Blink the tile color between original and blink colors
         
         Color originalColor = tileRenderer.material.color;
-        tileRenderer.gameObject.tag = "Blinking"; //Tile the tile as blinking
-        for (int i = 0; i < blinkTimes; i++)
+        if (tileRenderer.gameObject.tag != "Blinking") //to avoid the tile to stay blinking
         {
-            float elapsedTime = 0f;
-            while (elapsedTime < blinkDuration)
+            tileRenderer.gameObject.tag = "Blinking"; //Tile the tile as blinking
+            for (int i = 0; i < blinkTimes; i++)
             {
-                tileRenderer.material.color = blinkColor;
-                yield return new WaitForSeconds(blinkDuration / 2f);
-                tileRenderer.material.color = originalColor;
-                yield return new WaitForSeconds(blinkDuration / 2f);
-                elapsedTime += blinkDuration;
+                float elapsedTime = 0f;
+                while (elapsedTime < blinkDuration)
+                {
+                    tileRenderer.material.color = blinkColor;
+                    yield return new WaitForSeconds(blinkDuration / 2f);
+                    tileRenderer.material.color = originalColor;
+                    yield return new WaitForSeconds(blinkDuration / 2f);
+                    elapsedTime += blinkDuration;
+                }
             }
+            tileRenderer.gameObject.tag = "Untagged"; //Untag the tile
         }
-        tileRenderer.gameObject.tag = "Untagged"; //Untag the tile
     }
 
 

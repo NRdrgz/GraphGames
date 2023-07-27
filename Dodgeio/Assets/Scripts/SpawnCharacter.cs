@@ -38,6 +38,8 @@ public class SpawnCharacter : MonoBehaviour
         //rename game object
         character.name = "MainPlayer";
 
+        GameObject.Find("PseudoSpawner").GetComponent<PseudoSpawner>().CreatePseudo(character, Color.blue, PlayerPrefs.GetString("PlayerPseudo", "Player")); //Create the pseudo to the character
+
     }
 
     public void ChangeSkin() //To change the skin when clicking in the shop

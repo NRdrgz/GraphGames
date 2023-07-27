@@ -224,7 +224,7 @@ public class MovementEnemies : MonoBehaviour
     {
 
         // For example, you can check if the position is within the grid boundaries or if the grid cell is occupied.
-        if (position.z < -0.5 || position.x < 0 || position.z > GridManager.Instance.numRows-1.5f || position.x > GridManager.Instance.numColumns - 1f)
+        if (position.z < -0.6 || position.x < -0.1 || position.z > GridManager.Instance.numRows - 1.4f || position.x > GridManager.Instance.numColumns - 0.9f)
         {
             return false;
         }
@@ -269,7 +269,10 @@ public class MovementEnemies : MonoBehaviour
         //If the enemy fall out
         if (collision.gameObject.name == "Out")
         {
+
+            Destroy(GameObject.Find(gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(gameObject); //destroy ennemy
+
             GridManager.Instance.remainingEnemies--;
         }
 

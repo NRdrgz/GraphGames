@@ -37,10 +37,11 @@ public class SpawnEnemies : MonoBehaviour
         //scale character same as spawner
         enemy.transform.localScale = transform.localScale;
         //rename game object
-        enemy.name = "Enemy";
+        enemy.name = "Enemy_" + GridManager.Instance.currentEnemies;
 
-
-
+        GameObject.Find("PseudoSpawner").GetComponent<PseudoSpawner>().CreatePseudo(enemy, Color.red,
+            PseudoRandom.instance.GetRandomPseudo()); //Create the pseudo to the enemy
+        
 
     }
 }

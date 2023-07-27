@@ -164,8 +164,8 @@ public class MovementCharacter : MonoBehaviour
     private bool IsValidMove(Vector3 position)
     {
 
-        // For example, you can check if the position is within the grid boundaries or if the grid cell is occupied.
-        if (position.z < -0.5 || position.x < 0 || position.z > GridManager.Instance.numRows - 1.5f || position.x > GridManager.Instance.numColumns - 1f)
+        // We do not put exactly -0.5 or 0 to avoid rounding numbers issue
+        if (position.z < -0.6 || position.x < -0.1 || position.z > GridManager.Instance.numRows - 1.4f || position.x > GridManager.Instance.numColumns - 0.9f)
         {
             return false;
         }
@@ -189,6 +189,7 @@ public class MovementCharacter : MonoBehaviour
         //If the players fall out
         if (collision.gameObject.name == "Out")
         {
+            Destroy(GameObject.Find(gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(gameObject); //destroy character
             GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
 
