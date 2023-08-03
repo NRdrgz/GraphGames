@@ -13,6 +13,7 @@ public class MovementEnemies : MonoBehaviour
     private bool isMoving = false;
     private Vector3 targetPosition;
     private Animator animator;
+    private float dumbTimer;
 
     public enum MoveType
     {
@@ -29,6 +30,7 @@ public class MovementEnemies : MonoBehaviour
         // Get the animator when spawning
         animator = GetComponent<Animator>();
         moveTimer = Random.Range(minWaitTime, maxWaitTime);
+        dumbTimer = GridManager.Instance.dumbTimer;
         
     }
 
@@ -76,6 +78,16 @@ public class MovementEnemies : MonoBehaviour
                 CheckForRedTile();
             }
 
+        }
+
+        //Become dumb after dumbTimer is over
+        //Update dumb timer
+        dumbTimer -= Time.deltaTime;
+        if (dumbTimer <= 0f)
+        {
+            //Reset timer
+            dumbTimer = GridManager.Instance.dumbTimer; ;
+            moveType = MoveType.Random;
         }
 
         //Handle animations

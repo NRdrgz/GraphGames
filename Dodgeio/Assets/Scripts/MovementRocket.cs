@@ -41,6 +41,7 @@ public class MovementRocket : MonoBehaviour
             Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(collision.gameObject); //destroy player when it hits a rocket
             Destroy(gameObject);
+            GridManager.Instance.playerIsAlive = false;
             GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
             
 

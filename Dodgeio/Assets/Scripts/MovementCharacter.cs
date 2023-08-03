@@ -191,6 +191,7 @@ public class MovementCharacter : MonoBehaviour
         {
             Destroy(GameObject.Find(gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(gameObject); //destroy character
+            GridManager.Instance.playerIsAlive = false;
             GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
 
         }

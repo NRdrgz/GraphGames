@@ -21,7 +21,7 @@ public class SpawnCharacter : MonoBehaviour
     {
 
         CreateCharacter();
-
+        GridManager.Instance.playerIsAlive = true;
 
     }
 

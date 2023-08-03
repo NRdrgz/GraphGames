@@ -21,6 +21,8 @@ public class GridManager : MonoBehaviour
     public int nbrEnemies;
     public int remainingEnemies = 0;
     public int currentEnemies = 0;
+    public bool playerIsAlive;
+    public float dumbTimer = 40f; //Timer at which enemies become Dumb
 
     //LEVEL VARIABLES
 
@@ -33,11 +35,13 @@ public class GridManager : MonoBehaviour
     public float spawnTimerTiles = 0f;
     public float spawnDelayRateRockets; // Delay between two appearances of rocket
     public float spawnTimerRockets = 0f;
-    
-    
+    public float spawnDelayRateSpikes; // Delay between two appearances of spikes
+    public float spawnTimerSpikes = 0f;
+    public int nbrBranchSpikes; // Number of spikes branches
 
 
-    
+
+
     // Make the GridManager and Instance to call it elsewhere
     private void Awake()
     {
@@ -53,8 +57,11 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         GenerateGrid();
+        screen[1].SetActive(false);//Hide the counter panel
         level = PlayerPrefs.GetInt("Level", 1);
-        
+
+
+        //LEVEL VARIABLES
         spawnDelayRateTiles = -0.15f*level+5.15f; //Start at 5 at level 1 and 2 at level 20;
         if (spawnDelayRateTiles<2)
         {
@@ -66,6 +73,22 @@ public class GridManager : MonoBehaviour
         {
             spawnDelayRateTiles = 1;
         }
+
+        spawnDelayRateSpikes = -0.523f * level + 20.5f; //Start at 20 at level 1 and 10 at level 20;
+        if (spawnDelayRateTiles < 10f)
+        {
+            spawnDelayRateTiles = 10f;
+        }
+
+        if (level<10)
+        {
+            nbrBranchSpikes = 1;
+        }
+        if (level >= 10)
+        {
+            nbrBranchSpikes = 2;
+        }
+        //LEVEL VARIABLES //
 
     }
 
@@ -102,10 +125,19 @@ public class GridManager : MonoBehaviour
 
             }
 
-            //If character is the last survivor
-            if (remainingEnemies==0)
+            //Update spawn timer Spikes
+            spawnTimerSpikes -= Time.deltaTime;
+            if (spawnTimerSpikes <= 0f)
             {
-                panelControllerWin.ShowPanel();
+                CallCreateSpike();
+                spawnTimerSpikes = spawnDelayRateSpikes;
+
+            }
+
+            //If character is the last survivor
+            if (remainingEnemies==0 && playerIsAlive)
+            {
+                panelControllerWin.ShowPanel(); //Winning panel
                 gameStarted = false;
             }
 
@@ -115,9 +147,44 @@ public class GridManager : MonoBehaviour
 
     public void StartGame()
     {
-        gameStarted = true;
+        
         screen[0].SetActive(false); //make the main screen disappear
+        StartCoroutine(StartCounter()); //start the counter
+
+        //So that it does not start immediatly
+        spawnTimerTiles = spawnDelayRateTiles;
+        spawnTimerSpikes = spawnDelayRateSpikes;
+
     }
+
+    //Start the counter at the beginning of the game
+    public System.Collections.IEnumerator StartCounter()
+    {
+        screen[1].SetActive(true);//Show the counter panel
+
+        GameObject counter = GameObject.Find("Counter");
+
+        counter.GetComponent<TextMeshProUGUI>().text = "3";
+        iTween.PunchScale(counter, new Vector3(6, 6, 6), 1.0f);
+        yield return new WaitForSeconds(1.1f); //Wait for 1s
+
+        counter.GetComponent<TextMeshProUGUI>().text = "2";
+        iTween.PunchScale(counter, new Vector3(6, 6, 6), 1.0f);
+        yield return new WaitForSeconds(1.1f); //Wait for 1s
+
+        counter.GetComponent<TextMeshProUGUI>().text = "1";
+        iTween.PunchScale(counter, new Vector3(6, 6, 6), 1.0f);
+        yield return new WaitForSeconds(1.1f); //Wait for 1s
+
+        counter.GetComponent<TextMeshProUGUI>().text = "DODGE!";
+        iTween.PunchScale(counter, new Vector3(6, 6, 6), 1.0f);
+        yield return new WaitForSeconds(1.1f); //Wait for 1s
+
+        screen[1].SetActive(false);//Remove the counter panel
+        gameStarted = true; //start the game
+
+    }
+
 
 
     void GenerateGrid()
@@ -178,6 +245,11 @@ public class GridManager : MonoBehaviour
     private void CallCreateRocket()
     {
         StartCoroutine(GetComponent<SpawnRocket>().CreateRocket());
+    }
+
+    private void CallCreateSpike()
+    {
+        StartCoroutine(GetComponent<SpawnSpike>().CreateSpike());
     }
 
     private void CallTileFall()
