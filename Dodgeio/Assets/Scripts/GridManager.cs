@@ -38,6 +38,7 @@ public class GridManager : MonoBehaviour
     public float spawnDelayRateSpikes; // Delay between two appearances of spikes
     public float spawnTimerSpikes = 0f;
     public int nbrBranchSpikes; // Number of spikes branches
+    public int maxNbrRockets; //Maximum number of rockets
 
 
 
@@ -59,7 +60,7 @@ public class GridManager : MonoBehaviour
         GenerateGrid();
         screen[1].SetActive(false);//Hide the counter panel
         level = PlayerPrefs.GetInt("Level", 1);
-
+        
 
         //LEVEL VARIABLES
         spawnDelayRateTiles = -0.15f*level+5.15f; //Start at 5 at level 1 and 2 at level 20;
@@ -68,10 +69,10 @@ public class GridManager : MonoBehaviour
             spawnDelayRateTiles = 2;
         }
 
-        spawnDelayRateRockets = -0.11f * level + 3.11f; //Start at 3 at level 1 and 1 at level 20;
-        if (spawnDelayRateTiles < 1)
+        spawnDelayRateRockets = -0.073f * level + 3.073f; //Start at 3 at level 1 and 1.6 at level 20;
+        if (spawnDelayRateTiles < 1.6f)
         {
-            spawnDelayRateTiles = 1;
+            spawnDelayRateTiles = 1.6f;
         }
 
         spawnDelayRateSpikes = -0.523f * level + 20.5f; //Start at 20 at level 1 and 10 at level 20;
@@ -83,11 +84,18 @@ public class GridManager : MonoBehaviour
         if (level<10)
         {
             nbrBranchSpikes = 1;
+            maxNbrRockets = 2;
+            
         }
         if (level >= 10)
         {
             nbrBranchSpikes = 2;
+            maxNbrRockets = 4;
+            
         }
+
+
+
         //LEVEL VARIABLES //
 
     }
@@ -152,7 +160,6 @@ public class GridManager : MonoBehaviour
         StartCoroutine(StartCounter()); //start the counter
 
         //So that it does not start immediatly
-        spawnTimerTiles = spawnDelayRateTiles;
         spawnTimerSpikes = spawnDelayRateSpikes;
 
     }

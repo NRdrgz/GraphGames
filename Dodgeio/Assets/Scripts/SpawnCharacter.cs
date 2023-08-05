@@ -25,7 +25,7 @@ public class SpawnCharacter : MonoBehaviour
 
     }
 
-    void CreateCharacter()
+    public void CreateCharacter()
     {
         //Select a random tile to spawn ont
         int row = Random.Range(0, GridManager.Instance.numColumns);
@@ -44,7 +44,9 @@ public class SpawnCharacter : MonoBehaviour
 
     public void ChangeSkin() //To change the skin when clicking in the shop
     {
-        Destroy(GameObject.Find("MainPlayer"));
+        Destroy(GameObject.Find("MainPlayer")); //destroy the object
+        Destroy(GameObject.Find("MainPlayer" + "_pseudo")); //destroy the pseudo
+
         selectedSkin = PlayerPrefs.GetInt("SelectedSkin", 0); //Retrieve the saved skin, 0 by default
         characterPrefab = characterPrefabs[selectedSkin];
         CreateCharacter();

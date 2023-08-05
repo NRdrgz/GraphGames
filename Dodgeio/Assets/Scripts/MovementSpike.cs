@@ -69,7 +69,7 @@ public class MovementSpike : MonoBehaviour
         {
             ContactPoint contact = collision.contacts[0];
             Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);
-            Vector3 position = contact.point;
+            Vector3 position = new Vector3 (contact.point.x, 1, contact.point.z);
             Instantiate(spikeDeathPrefab, position, rotation);
 
             Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
@@ -85,7 +85,7 @@ public class MovementSpike : MonoBehaviour
         {
             ContactPoint contact = collision.contacts[0];
             Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);
-            Vector3 position = contact.point;
+            Vector3 position = new Vector3(contact.point.x, 1, contact.point.z);
             Instantiate(spikeDeathPrefab, position, rotation);
 
             Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo

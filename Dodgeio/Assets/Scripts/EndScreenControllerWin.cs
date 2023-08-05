@@ -22,15 +22,25 @@ public class EndScreenControllerWin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            RestartGame();
-        }
+            
     }
 
-    private void RestartGame()
+    public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void MultiplyRV()
+    {
+        //TODO WATHCH RV
+        Multiply();
+    }
+
+    private void Multiply()
+    {
+        gemIncrease = GemCounter.instance.currentGemsGame; //Get the number of won gems
+        GemCounter.instance.IncreaseGems(2*gemIncrease, "Main"); //increase the bank by the increase
+        RestartGame();
     }
 
     public void ShowPanel()

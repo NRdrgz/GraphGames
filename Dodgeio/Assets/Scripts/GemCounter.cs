@@ -10,6 +10,7 @@ public class GemCounter : MonoBehaviour
     public int currentGemsMain = 0;
     public int currentGemsGame = 0;
     public static GemCounter instance;
+    public int gemValue = 100;
 
     private void Awake()
     {
@@ -33,7 +34,7 @@ public class GemCounter : MonoBehaviour
 
     public void IncreaseGems(int v, string increaseType)
     {
-        if (increaseType == "Main")
+        if (increaseType == "Main") //For the overall main 
         {
             currentGemsMain = currentGemsMain + v;
             PlayerPrefs.SetInt("CollectedGems", currentGemsMain);
@@ -42,7 +43,7 @@ public class GemCounter : MonoBehaviour
 
         }
 
-        else if (increaseType == "Game")
+        else if (increaseType == "Game") //Only for the game, goes to main account if game is won
         {
             currentGemsGame = currentGemsGame + v;
             iTween.PunchScale(gemtextGame, new Vector3(2, 2, 2), 1.0f);

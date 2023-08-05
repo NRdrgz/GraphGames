@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class EndScreenControllerLose : MonoBehaviour
 {
@@ -16,13 +17,10 @@ public class EndScreenControllerLose : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            RestartGame();
-        }
+        
     }
 
-    private void RestartGame()
+    public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -30,6 +28,19 @@ public class EndScreenControllerLose : MonoBehaviour
     public void ShowPanel()
     {
         gameObject.SetActive(true); // Show the panel
+    }
+
+    public void ReviveRV()
+    {
+        //TODO WATHCH RV
+        Respawn();
+    }
+
+    private void Respawn()
+    {
+        GameObject.Find("CharacterSpawner").GetComponent<SpawnCharacter>().CreateCharacter();
+        GridManager.Instance.playerIsAlive = true;
+        gameObject.SetActive(false);
     }
 
 

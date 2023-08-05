@@ -58,7 +58,7 @@ public class MovementRocket : MonoBehaviour
             Destroy(collision.gameObject); //destroy enemy when it hits a rocket
             Destroy(gameObject);
             GridManager.Instance.remainingEnemies--;
-
+            
         }
 
     }

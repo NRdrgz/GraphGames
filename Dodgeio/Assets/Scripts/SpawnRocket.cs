@@ -9,9 +9,12 @@ public class SpawnRocket : MonoBehaviour
     public int spawnPositionOffset; //offset to move the spawning compared to the grid
     private int numColumns;
     private int numRows;
+    private int maxNbrRockets;
+    private int nbrRockets;
 
     private void Start()
     {
+        maxNbrRockets = GridManager.Instance.maxNbrRockets;
         
     }
 
@@ -31,6 +34,13 @@ public class SpawnRocket : MonoBehaviour
         (int numColumns, int numRows) = GridManager.Instance.GetGridSize();
         int spawnX = Random.Range(0, numColumns);
         int spawnZ = Random.Range(0, numRows);
+
+        //Determine the number of rockets
+        nbrRockets = Random.Range(1, maxNbrRockets + 1); //No issues if the nbr of rocket is below the min size of the grid
+        int remainingRockets = nbrRockets-1; //nbr of rockets to keep spawning
+        int spawnCounter = 1;
+        Vector3[] spawnPositionArray = new Vector3[nbrRockets]; //Array for the position of rockets
+        
         
 
         switch (sideIndex)
@@ -40,28 +50,25 @@ public class SpawnRocket : MonoBehaviour
             case 0: // Top side
                 spawnPosition = new Vector3(spawnX, 0.25f, (numRows - 0.5f) + spawnPositionOffset);
                 spawnRotation = Quaternion.Euler(-90f, 0f, 0f);
-                //string message = "Spawning on top:" + spawnPosition;
-                //Debug.Log(message);
+                
                 break;
             case 1: // Bottom side
                 spawnPosition = new Vector3(spawnX, 0.25f, -0.5f - spawnPositionOffset);
                 spawnRotation = Quaternion.Euler(90f, 0f, 0f);
-                //string message1 = "Spawning on bottom:" + spawnPosition;
-                //Debug.Log(message1);
+                
                 break;
             case 2: // Left side
                 spawnPosition = new Vector3(0f-spawnPositionOffset, 0.25f, spawnZ - 0.5f);
                 spawnRotation = Quaternion.Euler(0f, 0f, -90f);
-                //string message2 = "Spawning on left:" + spawnPosition;
-                //Debug.Log(message2);
+                
                 break;
             case 3: // Right side
                 spawnPosition = new Vector3(numColumns + spawnPositionOffset, 0.25f, spawnZ - 0.5f);
                 spawnRotation = Quaternion.Euler(0f, 0f, 90f);
-                //string message3 = "Spawning on right:" + spawnPosition;
-                //Debug.Log(message3);
+                
                 break;
         }
+        spawnPositionArray[0] = spawnPosition;
 
         //Blink the proper tiles and wait
 
@@ -72,7 +79,30 @@ public class SpawnRocket : MonoBehaviour
             case 0: // Top side
                 for (int row = 0; row < numRows; row++)
                 {
-                    CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX].GetComponentInChildren<Renderer>());
+                    CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX].GetComponentInChildren<Renderer>());   
+                }
+                while (remainingRockets > 0 && spawnX + spawnCounter < numColumns) //Blink the tiles for additional rockets
+                {
+                    for (int row = 0; row < numRows; row++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX + spawnCounter].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x + spawnCounter, spawnPosition.y, spawnPosition.z);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
+                spawnCounter = 1; //if we hit the maximum of the grid, we try the other side
+                while (remainingRockets > 0 && spawnX - spawnCounter >= 0) //Blink the tiles for additional rockets
+                {
+                    for (int row = 0; row < numRows; row++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX - spawnCounter].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x - spawnCounter, spawnPosition.y, spawnPosition.z);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
                 }
                 break;
             case 1: // Bottom side
@@ -80,11 +110,57 @@ public class SpawnRocket : MonoBehaviour
                 {
                     CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX].GetComponentInChildren<Renderer>());
                 }
+                while (remainingRockets > 0 && spawnX + spawnCounter < numColumns) //Blink the tiles for additional rockets
+                {
+                    for (int row = 0; row < numRows; row++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX + spawnCounter].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x + spawnCounter, spawnPosition.y, spawnPosition.z);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
+                spawnCounter = 1; //if we hit the maximum of the grid, we try the other side
+                while (remainingRockets > 0 && spawnX - spawnCounter >= 0) //Blink the tiles for additional rockets
+                {
+                    for (int row = 0; row < numRows; row++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[row, spawnX - spawnCounter].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x - spawnCounter, spawnPosition.y, spawnPosition.z);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
                 break;
             case 2: // Left side
                 for (int col = 0; col < numColumns; col++)
                 {
                     CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ, col].GetComponentInChildren<Renderer>());
+                }
+                while (remainingRockets > 0 && spawnZ + spawnCounter < numRows) //Blink the tiles for additional rockets
+                {
+                    for (int col = 0; col < numColumns; col++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ + spawnCounter, col].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z + spawnCounter);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
+                spawnCounter = 1; //if we hit the maximum of the grid, we try the other side
+                while (remainingRockets > 0 && spawnZ - spawnCounter >= 0) //Blink the tiles for additional rockets
+                {
+                    for (int col = 0; col < numColumns; col++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ - spawnCounter, col].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z - spawnCounter);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
                 }
                 break;
             case 3: // Right side
@@ -92,13 +168,40 @@ public class SpawnRocket : MonoBehaviour
                 {
                     CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ, col].GetComponentInChildren<Renderer>());
                 }
+                while (remainingRockets > 0 && spawnZ + spawnCounter < numRows) //Blink the tiles for additional rockets
+                {
+                    for (int col = 0; col < numColumns; col++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ + spawnCounter, col].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z + spawnCounter);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
+                spawnCounter = 1; //if we hit the maximum of the grid, we try the other side
+                while (remainingRockets > 0 && spawnZ - spawnCounter >= 0) //Blink the tiles for additional rockets
+                {
+                    for (int col = 0; col < numColumns; col++)
+                    {
+                        CallBlinkTile(GetComponent<GridManager>().GetGridCells()[spawnZ - spawnCounter, col].GetComponentInChildren<Renderer>());
+                    }
+                    spawnPositionArray[nbrRockets - remainingRockets] = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z - spawnCounter);
+                    remainingRockets--;
+                    spawnCounter++;
+                    
+                }
                 break;
         }
 
 
         yield return new WaitForSeconds(GetComponent<GridManager>().GetBlinkDuration()* GetComponent<GridManager>().GetBlinkTimes());
+
         // Instantiate the rocket prefab at the spawn position with the appropriate rotation
-        GameObject rocket = Instantiate(rocketPrefab, spawnPosition, spawnRotation);
+        for (int i = 0; i < nbrRockets; i++)
+        {
+            Instantiate(rocketPrefab, spawnPositionArray[i], spawnRotation);
+        }
 
     }
 

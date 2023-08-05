@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SkinUnlockGemBehavior : MonoBehaviour
 {
     private int skinPrice;
+    public GameObject skinPriceText;
     public int initialPrice;
     private int nbrUnlockedSkins;
+    private int currentGemsMain;
 
     public void Awake()
     {
@@ -14,6 +17,8 @@ public class SkinUnlockGemBehavior : MonoBehaviour
 
         nbrUnlockedSkins = PlayerPrefs.GetInt("NbrUnlockedSkins", 0); //Retrieve the number of unlocked skins
         skinPrice = initialPrice * (1 + nbrUnlockedSkins); //Increase the price by 100% for each unlocked skins
+        skinPriceText.GetComponent<TextMeshProUGUI>().text = skinPrice.ToString();
+        
 
         //Unlock the already unlocked skins
         for (int i = 1; i < 10; i++)
@@ -27,7 +32,8 @@ public class SkinUnlockGemBehavior : MonoBehaviour
 
     public void UnlockRandomSkin()
     {
-        if (nbrUnlockedSkins < 10) //Check if the player has not unlocked all the skins
+        currentGemsMain = PlayerPrefs.GetInt("CollectedGems", 0);
+        if (nbrUnlockedSkins < 9 && currentGemsMain > skinPrice) //Check if the player has not unlocked all the skins
         {
             int randomSkin = Random.Range(1, 10);
             while (PlayerPrefs.GetInt("UnlockedSkin" + randomSkin,0) == 1) //Until we find a locked skin
@@ -39,7 +45,10 @@ public class SkinUnlockGemBehavior : MonoBehaviour
             GameObject.Find("Skin" + randomSkin + "_mask").SetActive(false); //Make the mask disappear
 
             nbrUnlockedSkins++;
+            skinPrice = initialPrice * (1 + nbrUnlockedSkins); //Increase the price by 100% for each unlocked skins
+            skinPriceText.GetComponent<TextMeshProUGUI>().text = skinPrice.ToString();
             PlayerPrefs.SetInt("NbrUnlockedSkins", nbrUnlockedSkins);//Increase counter of unlocked skins
+            GemCounter.instance.IncreaseGems(-skinPrice, "Main"); //Decrease number of gems
         }
 
     }

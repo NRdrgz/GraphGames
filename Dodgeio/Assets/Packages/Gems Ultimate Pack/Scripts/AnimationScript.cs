@@ -98,7 +98,7 @@ public class AnimationScript : MonoBehaviour {
             iTween.MoveTo(gameObject, new Vector3(3f, 3.0f, 11f), 0.5f);//move the gem in upper right corner
             yield return new WaitForSeconds(0.5f);
             Destroy(gameObject);
-            GemCounter.instance.IncreaseGems(1000, "Game"); //increase counter
+            GemCounter.instance.IncreaseGems(GemCounter.instance.gemValue, "Game"); //increase counter
 
 
         }

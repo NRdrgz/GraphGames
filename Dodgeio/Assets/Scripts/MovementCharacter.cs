@@ -14,7 +14,7 @@ public class MovementCharacter : MonoBehaviour
     private Animator animator;
 
     //LEVEL VARIABLES
-    public float movementSpeed = 5f;
+    public float movementSpeed = 10f;
 
     public enum InputType
     {
@@ -45,6 +45,7 @@ public class MovementCharacter : MonoBehaviour
         {
             HandleKeyboardInput();
         }
+        
 
 
         if (isMoving)
@@ -60,8 +61,9 @@ public class MovementCharacter : MonoBehaviour
 
         //Handle animations
         animator.SetBool("isMoving", isMoving);
-
+        animator.SetFloat("Speed", movementSpeed);
     }
+
 
 
     private void HandleKeyboardInput()
@@ -114,6 +116,7 @@ public class MovementCharacter : MonoBehaviour
 
         }
     }
+
 
     private void CalculateSwipeDirection()
     {

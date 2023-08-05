@@ -58,7 +58,7 @@ public class MovementEnemies : MonoBehaviour
 
             if (moveType == MoveType.Smart)
             {
-                DecideSmartDirection();
+                DecideSmartDirection(false);
             }
             else
             {
@@ -92,6 +92,7 @@ public class MovementEnemies : MonoBehaviour
 
         //Handle animations
         animator.SetBool("isMoving", isMoving);
+        animator.SetFloat("Speed", movementSpeed);
 
     }
 
@@ -118,7 +119,7 @@ public class MovementEnemies : MonoBehaviour
         
     }
     
-    private void DecideSmartDirection()
+    private void DecideSmartDirection(bool needToMove)
     {
         //Scan the surroundings
         /*Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
@@ -133,6 +134,8 @@ public class MovementEnemies : MonoBehaviour
         int[] moveOrder = new int[] { 0, 1, 2, 3 }; //Move order to check
         moveOrder = ShuffleArray(moveOrder); //Shuffle the array
         RaycastHit hit;
+        bool hasMoved = false;
+        Vector3[] movePosibilities = new Vector3[] {Vector3.right, Vector3.left, Vector3.back, Vector3.forward};
 
         // Iterate through the shuffled array using a for loop
         for (int i = 0; i < moveOrder.Length; i++)
@@ -150,6 +153,7 @@ public class MovementEnemies : MonoBehaviour
                 && hit.collider.gameObject.tag != "Blinking")
                 {
                     //Debug.Log("Nice tile on right");
+                    hasMoved = true;
                     MoveCharacter(Vector3.right);
                     break;
                 }
@@ -168,6 +172,7 @@ public class MovementEnemies : MonoBehaviour
                 && hit.collider.gameObject.tag != "Blinking")
                 {
                     //Debug.Log("Nice tile on up");
+                    hasMoved = true;
                     MoveCharacter(Vector3.forward);
                     break;
                 }
@@ -186,6 +191,7 @@ public class MovementEnemies : MonoBehaviour
                 && hit.collider.gameObject.tag != "Blinking")
                 {
                     //Debug.Log("Nice tile on left");
+                    hasMoved = true;
                     MoveCharacter(Vector3.left);
                     break;
                 }
@@ -204,11 +210,19 @@ public class MovementEnemies : MonoBehaviour
                 && hit.collider.gameObject.tag != "Blinking")
                 {
                     //Debug.Log("Nice tile on back");
+                    hasMoved = true;
                     MoveCharacter(Vector3.back);
                     break;
                 }
 
             }
+
+            
+        }
+
+        if (needToMove == true && hasMoved == false) //if have not moved before, move randomly
+        {
+            MoveCharacter(movePosibilities[Random.Range(0, 4)]);
         }
     }
     
@@ -268,7 +282,7 @@ public class MovementEnemies : MonoBehaviour
                 //Debug.Log("Character is standing on a red tile!");
                 if (!isMoving)
                 {
-                    DecideSmartDirection();
+                    DecideSmartDirection(true);
                 }
             }
         }
