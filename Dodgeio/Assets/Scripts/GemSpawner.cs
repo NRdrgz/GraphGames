@@ -6,7 +6,7 @@ public class GemSpawner : MonoBehaviour
 {
     public GameObject gemPrefab;
     public int maxGems = 10;
-    public float spawnInterval = 5f;
+    public float spawnInterval = 4f;
 
     private int gemsSpawned = 0;
     private float timer = 0f;

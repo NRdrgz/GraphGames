@@ -37,6 +37,7 @@ public class MovementRocket : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);
             Vector3 position = contact.point;
             Instantiate(explosionPrefab, position, rotation);
+            
 
             Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(collision.gameObject); //destroy player when it hits a rocket
@@ -53,6 +54,7 @@ public class MovementRocket : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(0f, 0f, 0f);
             Vector3 position = contact.point;
             Instantiate(explosionPrefab, position, rotation);
+            
 
             Destroy(GameObject.Find(collision.gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(collision.gameObject); //destroy enemy when it hits a rocket

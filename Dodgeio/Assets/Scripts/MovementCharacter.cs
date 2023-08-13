@@ -22,7 +22,7 @@ public class MovementCharacter : MonoBehaviour
         Keyboard
     }
 
-    public InputType inputType = InputType.Keyboard;
+    public InputType inputType = InputType.Swipe;
 
 
 
@@ -161,6 +161,7 @@ public class MovementCharacter : MonoBehaviour
         {
             targetPosition = newPosition;
             isMoving = true;
+            SfxManager.instance.PlaySfxById(0);
         }
     }
 
@@ -195,6 +196,9 @@ public class MovementCharacter : MonoBehaviour
             Destroy(GameObject.Find(gameObject.name + "_pseudo")); //destroy the pseudo
             Destroy(gameObject); //destroy character
             GridManager.Instance.playerIsAlive = false;
+
+            
+
             GridManager.Instance.panelControllerLose.ShowPanel(); //make end screen appear
 
         }
