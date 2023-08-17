@@ -106,7 +106,7 @@ public class AnimationScript : MonoBehaviour {
             {
                 Handheld.Vibrate();
             }
-
+            SfxManager.instance.PlaySfxById(1);
             iTween.MoveTo(gameObject, new Vector3(3f, 3.0f, 11f), 0.5f);//move the gem in upper right corner
             yield return new WaitForSeconds(0.4f);
             Destroy(gameObject);
