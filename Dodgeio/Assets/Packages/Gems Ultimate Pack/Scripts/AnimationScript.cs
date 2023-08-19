@@ -96,16 +96,8 @@ public class AnimationScript : MonoBehaviour {
         {
 
             //make the phone vibrate
-            // Check if the device supports vibration
-            /*if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                // Trigger a short vibration
-                Handheld.Vibrate();
-            }*/
-            if (PlayerPrefs.GetInt("VibrateOn", 1) == 1)
-            {
-                Handheld.Vibrate();
-            }
+            GameObject.Find("HapticManager").GetComponent<HapticManager>().Vibrate();
+
             SfxManager.instance.PlaySfxById(1);
             iTween.MoveTo(gameObject, new Vector3(3f, 3.0f, 11f), 0.5f);//move the gem in upper right corner
             yield return new WaitForSeconds(0.4f);

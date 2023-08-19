@@ -11,14 +11,16 @@ public class SkinUnlockRVBehavior : MonoBehaviour
     private int nbrUnlockedSkins;
     
 
-    public void Awake()
+    public void Start()
     {
+        
         //TODO: Change variables if more skins are added
 
         nbrUnlockedSkins = PlayerPrefs.GetInt("NbrUnlockedSkins", 0); //Retrieve the number of unlocked skins
         skinPrice = initialPrice * (1 + nbrUnlockedSkins); //Increase the price by 100% for each unlocked skins
-        
 
+        //Already done in GemBehavior
+        /*
         //Unlock the already unlocked skins
         for (int i = 1; i < 10; i++)
         {
@@ -26,7 +28,7 @@ public class SkinUnlockRVBehavior : MonoBehaviour
             {
                 GameObject.Find("Skin" + i + "_mask").SetActive(false); //Make the mask disappear
             }
-        }
+        }*/
     }
 
 

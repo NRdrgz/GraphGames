@@ -30,6 +30,12 @@ public class MovementCharacter : MonoBehaviour
     {
         // Get the animator when spawning
         animator = GetComponent<Animator>();
+
+        //Change input type if on desktop editor
+        if(Application.isEditor)
+        {
+            inputType = InputType.Keyboard;
+        }
     }
 
 
