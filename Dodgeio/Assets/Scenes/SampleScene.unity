@@ -4093,7 +4093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9528302, g: 0.9491207, b: 0.9483357, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11767,6 +11767,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinPriceText: {fileID: 1531904989}
   initialPrice: 3000
+  blinkDuration: 0.4
+  animationDuration: 4
+  originalColor: {r: 0.9716981, g: 0.9579477, b: 0.9579477, a: 1}
+  blinkColor: {r: 0.8396226, g: 0.06732824, b: 0.06732824, a: 1}
 --- !u!114 &1676141681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11794,6 +11798,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinPriceText: {fileID: 1531904989}
   initialPrice: 3000
+  blinkDuration: 0.4
+  animationDuration: 4
+  originalColor: {r: 0.972549, g: 0.95686275, b: 0.95686275, a: 1}
+  blinkColor: {r: 0.8392157, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &1688583725
 GameObject:
   m_ObjectHideFlags: 0
@@ -12969,7 +12977,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1676141680}
         m_TargetAssemblyTypeName: SkinUnlockGemBehavior, Assembly-CSharp
-        m_MethodName: UnlockRandomSkin
+        m_MethodName: UnlockRandomSkinWrapper
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class SkinUnlockRVBehavior : MonoBehaviour
@@ -9,7 +10,11 @@ public class SkinUnlockRVBehavior : MonoBehaviour
     public GameObject skinPriceText;
     public int initialPrice;
     private int nbrUnlockedSkins;
-    
+
+    public float blinkDuration;
+    public float animationDuration;
+    public Color originalColor;
+    public Color blinkColor;
 
     public void Start()
     {
@@ -41,7 +46,7 @@ public class SkinUnlockRVBehavior : MonoBehaviour
         }
     }
 
-    public void UnlockRandomSkin()
+    public System.Collections.IEnumerator UnlockRandomSkin()
     {
         
         if (nbrUnlockedSkins < 9 ) //Check if the player has not unlocked all the skins
@@ -51,6 +56,27 @@ public class SkinUnlockRVBehavior : MonoBehaviour
             {
                 randomSkin = Random.Range(1, 10);
             }
+
+            ///// Animation for unlocking the skin
+            float elapsedTime = animationDuration;
+            while (elapsedTime >= 0f)
+            {
+                for (int i = 1; i < 10; i++)
+                {
+                    if (PlayerPrefs.GetInt("UnlockedSkin" + i, 0) != 1) //If the skin is not unlocked
+                    {
+                        GameObject.Find("Skin" + i + "_mask").GetComponent<Image>().color = blinkColor;
+                        yield return new WaitForSeconds(blinkDuration / 2f);
+
+                        GameObject.Find("Skin" + i + "_mask").GetComponent<Image>().color = originalColor;
+                        yield return new WaitForSeconds(blinkDuration / 2f);
+
+                        elapsedTime -= blinkDuration;
+                    }
+                }
+            }
+            ///
+
 
             PlayerPrefs.SetInt("UnlockedSkin" + randomSkin, 1); //Unlock the skin
             GameObject.Find("Skin" + randomSkin + "_mask").SetActive(false); //Make the mask disappear

@@ -266,7 +266,7 @@ public class AdManager : MonoBehaviour
 
         if (rvType == "Unlock Skin")
         {
-            GameObject.Find("SkinsShop").GetComponent<SkinUnlockRVBehavior>().UnlockRandomSkin();
+            StartCoroutine(GameObject.Find("SkinsShop").GetComponent<SkinUnlockRVBehavior>().UnlockRandomSkin());
         }
     }
 
