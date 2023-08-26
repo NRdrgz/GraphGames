@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.iOS;
 
 public class HapticManager : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class HapticManager : MonoBehaviour
 
     public void Vibrate()
     {
-
+        /*
         if (PlayerPrefs.GetInt("VibrateOn", 1) == 1)
         {
             if (Application.platform == RuntimePlatform.IPhonePlayer)
@@ -31,7 +30,7 @@ public class HapticManager : MonoBehaviour
             }
 
         }
-
+        */
 
 
     }
