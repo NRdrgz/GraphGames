@@ -6,6 +6,7 @@ public class MovementCharacter : MonoBehaviour
 {
     //VARIABLES
     private bool isSwiping = false;
+    public float movementSpeed;
     private Vector2 swipeStartPosition;
     private Vector2 swipeEndPosition;
     private Vector3 targetPosition;
@@ -14,7 +15,8 @@ public class MovementCharacter : MonoBehaviour
     private Animator animator;
 
     //LEVEL VARIABLES
-    public float movementSpeed = 10f;
+    public float initialMovementSpeed = 10f;
+    
 
     public enum InputType
     {
@@ -36,6 +38,8 @@ public class MovementCharacter : MonoBehaviour
         {
             inputType = InputType.Keyboard;
         }
+
+        movementSpeed = initialMovementSpeed * (1f + PlayerPrefs.GetInt("SpeedLevel", 1)/10f); //Update movement speed with speed Level from Incr button
     }
 
 
