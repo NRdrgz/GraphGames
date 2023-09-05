@@ -70,15 +70,15 @@ public class GridManager : MonoBehaviour
         }
 
         spawnDelayRateRockets = -0.073f * level + 3.073f; //Start at 3 at level 1 and 1.6 at level 20;
-        if (spawnDelayRateTiles < 1.6f)
+        if (spawnDelayRateRockets < 1.6f)
         {
-            spawnDelayRateTiles = 1.6f;
+            spawnDelayRateRockets = 1.6f;
         }
 
         spawnDelayRateSpikes = -0.523f * level + 20.5f; //Start at 20 at level 1 and 10 at level 20;
-        if (spawnDelayRateTiles < 10f)
+        if (spawnDelayRateSpikes < 10f)
         {
-            spawnDelayRateTiles = 10f;
+            spawnDelayRateSpikes = 10f;
         }
 
         if (level<10)
