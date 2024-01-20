@@ -1,6 +1,7 @@
 # GraphGames
 
 Welcome to GraphGames, an exciting journey into the world of hypercasual mobile gaming! This repository houses my very first foray into game development, inspired by my experiences working alongside numerous talented game developers.
+The game here has been developed in Unity Engine
 
 ## About the Project
 
@@ -13,3 +14,9 @@ GraphGames is a mobile app developed in C# focusing on the hypercasual gaming ge
 - **Mobile-Friendly**: Optimized for smooth performance on various mobile devices.
 - **Ad-Tech Integration**: Integrate the Ad tech and tracking for mobiles apps
 
+### Installation
+
+1. Clone the repo
+   ```bash
+   git clone https://github.com/NRdrgz/GraphGames.git
+2. Open the code in Unity Game Engine
